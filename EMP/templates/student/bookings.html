@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">My Bookings (History)</h3>
+<table class="table table-bordered bg-white align-middle">
+  <thead class="table-light">
+    <tr><th>ID</th><th>Exam</th><th>Date</th><th>Time</th><th>Examiner</th><th>Booked on</th><th>Status</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for b, can_cancel in rows %}
+    <tr>
+      <td>{{ b.id }}</td><td>{{ b.slot.exam.name }}</td><td>{{ b.slot.date }}</td>
+      <td>{{ b.slot.start_time.strftime('%H:%M') }} - {{ b.slot.end_time.strftime('%H:%M') }}</td>
+      <td>{{ b.slot.examiner.name }}</td>
+      <td>{{ b.booking_date.strftime('%d-%m-%Y %H:%M') }}</td>
+      <td>{{ b.status }}</td>
+      <td>
+        {% if can_cancel %}
+        <form method="POST" action="{{ url_for('cancel_booking', bid=b.id) }}">
+          <button class="btn btn-sm btn-danger">Cancel</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}<tr><td colspan="8" class="text-center">Abhi koi booking nahi.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-4">Examiner Dashboard</h3>
+<div class="row g-3 mb-4">
+  {% for label, value in [('Assigned Exams', rows|length), ('Slots Created', n_slots),
+     ('Students Booked', booked), ('Pending Evaluations', pending)] %}
+  <div class="col-md-3">
+    <div class="card shadow-sm text-center">
+      <div class="card-body">
+        <h2 class="mb-0">{{ value }}</h2>
+        <p class="text-muted mb-0">{{ label }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h5>Assigned Examinations</h5>
+<table class="table table-bordered bg-white align-middle">
+  <thead class="table-light">
+    <tr><th>Exam</th><th>Course</th><th>Type</th><th>Status</th><th>Slot Creation</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for e, can in rows %}
+    <tr>
+      <td>{{ e.name }}</td>
+      <td>{{ e.course.code }}</td>
+      <td>{{ e.exam_type }}</td>
+      <td><span class="badge bg-info text-dark">{{ e.status }}</span></td>
+      <td>{{ e.slot_create_start }} to {{ e.slot_create_end }}</td>
+      <td>
+        {% if can %}
+          <a href="{{ url_for('add_slot') }}" class="btn btn-sm btn-primary">Create Slot</a>
+        {% else %}
+          <span class="text-muted">Slot creation closed</span>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="text-center">Aapko abhi koi exam assign nahi hua.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">Students</h3>
+<form class="mb-3 d-flex gap-2" method="GET">
+  <input name="q" value="{{ q }}" class="form-control" placeholder="Search by name, email or ID">
+  <button class="btn btn-outline-secondary">Search</button>
+</form>
+<table class="table table-bordered bg-white">
+  <thead class="table-light"><tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th></tr></thead>
+  <tbody>
+  {% for s in students %}
+    <tr><td>{{ s.id }}</td><td>{{ s.name }}</td><td>{{ s.email }}</td><td>{{ s.contact or '-' }}</td></tr>
+  {% else %}<tr><td colspan="4" class="text-center">Koi student nahi mila.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

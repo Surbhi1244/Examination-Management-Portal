@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">My Results</h3>
+<table class="table table-bordered bg-white">
+  <thead class="table-light"><tr><th>Exam</th><th>Date</th><th>Marks</th><th>Remarks</th></tr></thead>
+  <tbody>
+  {% for b in rows %}
+    <tr>
+      <td>{{ b.slot.exam.name }}</td><td>{{ b.slot.date }}</td>
+      <td>{{ b.total_marks }} / {{ b.slot.exam.max_marks }}</td>
+      <td>{{ b.remarks or '-' }}</td>
+    </tr>
+  {% else %}<tr><td colspan="4" class="text-center">Abhi koi result publish nahi hua.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

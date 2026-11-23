@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">Examiners</h3>
+<form class="mb-3 d-flex gap-2" method="GET">
+  <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search by name or ID">
+  <button class="btn btn-outline-secondary">Search</button>
+</form>
+<table class="table table-bordered bg-white">
+  <thead class="table-light">
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Approval</th><th>Active</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for e in examiners %}
+    <tr>
+      <td>{{ e.id }}</td><td>{{ e.name }}</td><td>{{ e.email }}</td><td>{{ e.department }}</td>
+      <td>{{ 'Approved' if e.is_approved else 'Pending' }}</td>
+      <td>{{ 'Yes' if e.is_active_user else 'No' }}</td>
+      <td class="d-flex gap-2">
+        {% if not e.is_approved %}
+        <form method="POST" action="{{ url_for('examiner_action', uid=e.id, action='approve') }}">
+          <button class="btn btn-sm btn-success">Approve</button>
+        </form>
+        {% endif %}
+        {% if e.is_active_user %}
+        <form method="POST" action="{{ url_for('examiner_action', uid=e.id, action='deactivate') }}">
+          <button class="btn btn-sm btn-danger">Deactivate</button>
+        </form>
+        {% else %}
+        <form method="POST" action="{{ url_for('examiner_action', uid=e.id, action='activate') }}">
+          <button class="btn btn-sm btn-secondary">Activate</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="text-center">Koi examiner nahi mila.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

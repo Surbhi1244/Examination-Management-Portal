@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h3>Examinations</h3>
+    <a href="{{ url_for('add_exam') }}" class="btn btn-primary">+ Add Exam</a>
+</div>
+<form class="mb-3 d-flex gap-2" method="GET">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search by name or ID">
+    <button class="btn btn-outline-secondary">Search</button>
+</form>
+<table class="table table-bordered bg-white align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Course</th>
+            <th>Type</th>
+            <th>Examiner</th>
+            <th>Status</th>
+            <th>Change Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in exams %}
+        <tr>
+            <td>{{ e.id }}</td>
+            <td>{{ e.name }}</td>
+            <td>{{ e.course.code }}</td>
+            <td>{{ e.exam_type }}</td>
+            <td>{{ e.examiner.name if e.examiner else '-' }}</td>
+            <td><span class="badge bg-info text-dark">{{ e.status }}</span></td>
+            <td>
+                <form method="POST" action="{{ url_for('exam_status', eid=e.id) }}" class="d-flex gap-1">
+                    <select name="status" class="form-select form-select-sm">
+                        {% for s in ['Draft','Slot Creation','Booking Open','Closed','Completed'] %}
+                        <option {{ 'selected' if e.status==s }}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-sm btn-primary">Set</button>
+                </form>
+            </td>
+            <td>
+                <div class="d-flex gap-1">
+                    <a href="{{ url_for('exam_rubrics', eid=e.id) }}" class="btn btn-sm btn-secondary">Rubrics</a>
+                    <a href="{{ url_for('edit_exam', eid=e.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    <form method="POST" action="{{ url_for('delete_exam', eid=e.id) }}">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('publish_results', eid=e.id) }}">
+                        <button class="btn btn-sm btn-info">{{ 'Unpublish' if e.results_published else 'Publish Results'
+                            }}</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="8" class="text-center">Koi exam nahi mila.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

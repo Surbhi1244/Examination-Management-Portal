@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Change Examiner: Slot #{{ slot.id }}</h3>
+<p class="text-muted">{{ slot.exam.name }} | {{ slot.date }} {{ slot.start_time.strftime('%H:%M') }} | Abhi: {{ slot.examiner.name }}</p>
+<form method="POST" class="card card-body shadow-sm" style="max-width:500px">
+  <div class="mb-3">
+    <label class="form-label">Naya examiner</label>
+    <select name="examiner_id" class="form-select" required>
+      {% for u in examiners %}<option value="{{ u.id }}">{{ u.name }} ({{ u.department }})</option>
+      {% else %}<option value="">Koi dusra approved examiner nahi hai</option>{% endfor %}
+    </select>
+  </div>
+  <button class="btn btn-primary" {{ 'disabled' if not examiners }}>Change</button>
+</form>
+<a href="{{ url_for('admin_slots') }}" class="btn btn-outline-secondary mt-3">Back</a>
+{% endblock %}

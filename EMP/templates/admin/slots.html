@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">All Slots</h3>
+<form class="mb-3 d-flex gap-2" method="GET">
+  <input name="q" value="{{ q }}" class="form-control" placeholder="Search by exam name or slot ID">
+  <button class="btn btn-outline-secondary">Search</button>
+</form>
+<table class="table table-bordered bg-white align-middle">
+  <thead class="table-light">
+    <tr><th>ID</th><th>Exam</th><th>Examiner</th><th>Date</th><th>Time</th><th>Seats</th><th>Status</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for s in slots %}
+    <tr>
+      <td>{{ s.id }}</td><td>{{ s.exam.name }}</td><td>{{ s.examiner.name }}</td><td>{{ s.date }}</td>
+      <td>{{ s.start_time.strftime('%H:%M') }} - {{ s.end_time.strftime('%H:%M') }}</td>
+      <td>{{ s.available_seats }} / {{ s.capacity }}</td><td>{{ s.status }}</td>
+      <td>
+        {% if s.status not in ['Cancelled', 'Completed'] %}
+        <a href="{{ url_for('change_slot_examiner', sid=s.id) }}" class="btn btn-sm btn-warning">Change Examiner</a>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}<tr><td colspan="8" class="text-center">Koi slot nahi mila.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}
